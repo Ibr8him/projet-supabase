@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire</title>
+    <style>
+        body {
+            background: linear-gradient(120deg, #edebee 0%, #8ec5fc 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            color: #5a189a;
+            margin-bottom: 2rem;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
+        }
+        .form-container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px 0 rgba(90, 24, 154, 0.10);
+            padding: 2.2rem 2.5rem 1.5rem 2.5rem;
+            margin: 1.2rem 0;
+            max-width: 350px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            align-items: stretch;
+        }
+        label {
+            font-weight: 500;
+            color: #5a189a;
+            margin-bottom: 0.2rem;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            padding: 0.7rem 1rem;
+            border: 1px solid #d1c4e9;
+            border-radius: 7px;
+            font-size: 1rem;
+            background: #f8f7fa;
+            margin-bottom: 0.7rem;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border: 1.5px solid #5a189a;
+            outline: none;
+        }
+        button[type="button"] {
+            background: linear-gradient(90deg, #5a189a 0%, #8ec5fc 100%);
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 0.8rem 0;
+             width: 100%;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            box-shadow: 0 2px 8px rgba(90, 24, 154, 0.08);
+            transition: background 0.2s, transform 0.1s;
+        }
+        button[type="button"]:hover {
+            background: green;
+            color: #fff;
+            transform: translateY(-2px) scale(1.03);
+        }
+        @media (max-width: 600px) {
+            .form-container {
+                max-width: 98vw;
+                padding: 1.2rem 0.7rem 1.2rem 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+        <!-- Modale d'erreur Bootstrap -->
+        <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="errorModalLabel">Erreur de connexion</h5>
+                        <button type="buttons" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="errorMessage">
+                        <!-- Message d'erreur JS -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="buttons" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <h1>connexion</h1>
+    <div class="form-container">
+        <!-- formulaire de connexion -->
+         
+        <form>
+            <label for="email">Email:</label><br>
+            <input type="email" id="emails" name="email" required><br>
+
+            <label for="password">Mot de passe:</label><br>
+            <input type="password" id="passwords" name="password" required><br>
+
+            <button type="button" onclick="signIn(document.getElementById('emails').value, 
+            document.getElementById('passwords').value)">Se connecter</button>
+            <label>Pas de compte? <a href="enregistrement.html">S'inscrire</a> </label>
+                
+        </form>
+    </div>
+
+    <!-- connexion avec supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+       // import { createClient } from '@supabase/supabase-js'
+        const supabaseUrl = 'https://rnbhweyftnfwuxjpioye.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJuYmh3ZXlmdG5md3V4anBpb3llIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4NzM0MDEsImV4cCI6MjA3NDQ0OTQwMX0.ZHcAX5g6BaYbG6wXvnmWXzooVQdVDZ6Izu5ysvolX1o';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        
+        async function signIn(email, password) {
+            const { data, error } = await supabase.auth.signInWithPassword({
+               email,
+                 password
+            });
+            if(error) {
+                // Affiche la modale Bootstrap avec le message d'erreur
+                document.getElementById('errorMessage').textContent = error.message;
+                var modal = new bootstrap.Modal(document.getElementById('errorModal'));
+                modal.show();
+            } else {
+                window.location.href = 'Profile.html';
+            }
+        }
+    </script>
+</body>
+</html>
